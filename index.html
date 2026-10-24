@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>idaexe</title>
-    <meta name="description" content="Systems programmer and security researcher focused on reverse engineering, Windows internals, software protection and low-level C++ development. Based in Belgium.">
-    <meta name="author" content="idaexe">
+    <title>ptrfault</title>
+    <meta name="description" content="Systems programmer and security researcher focused on reverse engineering, Windows internals, software protection and low-level C++ development.">
+    <meta name="author" content="ptrfault">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#0d0d0d">
-    <link rel="canonical" href="https://idaexe.github.io/">
+    <link rel="canonical" href="https://ptrfault.github.io/">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://idaexe.github.io/">
-    <meta property="og:title" content="idaexe — Systems Programming & Security Research">
-    <meta property="og:description" content="Systems programmer and security researcher focused on reverse engineering, Windows internals, software protection and low-level C++ development. Based in Belgium.">
-    <meta property="og:image" content="https://idaexe.github.io/the-school-of-athens.jpg">
+    <meta property="og:url" content="https://ptrfault.github.io/">
+    <meta property="og:title" content="ptrfault — Systems Programming & Security Research">
+    <meta property="og:description" content="Systems programmer and security researcher focused on reverse engineering, Windows internals, software protection and low-level C++ development.">
+    <meta property="og:image" content="https://ptrfault.github.io/the-school-of-athens.jpg">
     <meta property="og:locale" content="en_US">
-    <meta property="og:site_name" content="idaexe">
+    <meta property="og:site_name" content="ptrfault">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://idaexe.github.io/">
-    <meta name="twitter:title" content="idaexe — Systems Programming & Security Research">
-    <meta name="twitter:description" content="Systems programmer and security researcher focused on reverse engineering, Windows internals, software protection and low-level C++ development. Based in Belgium.">
-    <meta name="twitter:image" content="https://idaexe.github.io/the-school-of-athens.jpg">
+    <meta name="twitter:url" content="https://ptrfault.github.io/">
+    <meta name="twitter:title" content="ptrfault — Systems Programming & Security Research">
+    <meta name="twitter:description" content="Systems programmer and security researcher focused on reverse engineering, Windows internals, software protection and low-level C++ development.">
+    <meta name="twitter:image" content="https://ptrfault.github.io/the-school-of-athens.jpg">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Person",
-        "name": "idaexe",
-        "url": "https://idaexe.github.io",
+        "name": "ptrfault",
+        "url": "https://ptrfault.github.io",
         "email": "bG9s@proton.me",
         "description": "Systems programmer and security researcher focused on reverse engineering, Windows internals and software protection.",
         "knowsAbout": ["Systems Programming", "Reverse Engineering", "Software Security", "Windows Internals", "C++", "Software Protection", "Compiler Design"],
@@ -35,334 +35,598 @@
           "@type": "Place",
           "name": "Belgium"
         },
-        "sameAs": ["https://github.com/idaexe"]
+        "sameAs": ["https://github.com/ptrfault"]
       }
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&family=Figtree:wght@300;400&display=swap" rel="stylesheet">
-    <style>
-      *,
-      *::before,
-      *::after {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-      :root {
-        --bg: #0d0d0d;
-        --text: #dfdfda;
-        --soft: #6b6b6b;
-        --mid: #a2a2a2;
-        --line: #1d1d1d;
-        --hover: #161616;
-      }
+    body {
+      background-color: #0f0f10;
+      color: #d4d4d8;
+      font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.65;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-      html {
-        scroll-behavior: smooth;
-      }
+    #intro-layer {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #0f0f10;
+      z-index: 50;
+      padding: 1.5rem;
+      cursor: pointer;
+      user-select: none;
+      opacity: 1;
+      transform: translateY(0);
+      transition:
+        opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
 
-      body {
-        font-family: 'Figtree', sans-serif;
-        font-weight: 300;
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.9;
-        padding: 80px 26px 120px;
-        -webkit-font-smoothing: antialiased;
-      }
+    #intro-layer.fade-out {
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+    }
 
-      .container {
-        max-width: 820px;
-        margin: auto;
-      }
+    .intro-line {
+      font-size: 2.15rem;
+      font-weight: 700;
+      color: #f5f5f7;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      text-shadow:
+        0 0 14px rgba(255, 255, 255, 0.2),
+        0 0 28px rgba(255, 42, 133, 0.11);
+      display: inline-flex;
+      align-items: baseline;
+    }
 
-      header {
-        margin-bottom: 60px;
-      }
+    .cursor {
+      display: inline-block;
+      margin-left: 2px;
+      color: #ff2a85;
+      font-weight: 400;
+      animation: blink 0.85s steps(1) infinite;
+    }
 
-      h1 {
-        font-family: 'Fraunces', serif;
-        font-style: italic;
-        font-weight: 300;
-        font-size: 64px;
-        letter-spacing: -2px;
-        line-height: 1;
-        margin-bottom: 18px;
-      }
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
 
-      .intro {
-        font-size: 16px;
-        color: var(--mid);
-        line-height: 1.8;
-        margin-bottom: 34px;
-        width: 100%;
-        max-width: none;
-      }
+	.wrap {
+      width: 100%;
+      max-width: 460px;
+      background-color: #0f0f10;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition:
+        opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+    }
 
-      .hero-image {
-        position: relative;
-        overflow: hidden;
-        border-radius: 18px;
-        border: 1px solid var(--line);
-        margin-bottom: 22px;
-        opacity: .92;
-      }
+    .wrap.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
 
-      .hero-image::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to bottom, rgba(0, 0, 0, .2), rgba(0, 0, 0, .45));
-      }
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 6px;
+      margin-bottom: 2rem;
+    }
 
-      .hero-image img {
-        display: block;
-        width: 100%;
-        aspect-ratio: 16/5;
-        object-fit: cover;
-        filter: brightness(.75) contrast(1.05) saturate(.9);
-        transition: transform .7s ease;
-      }
+    .pfp-wrap {
+      width: 108px;
+      height: 108px;
+      position: relative;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-      .hero-image:hover img {
-        transform: scale(1.02);
-      }
+    .pfp {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      mix-blend-mode: screen;
+      filter: brightness(1.65) contrast(1.24) drop-shadow(0 0 16px rgba(255, 255, 255, 0.08));
+      -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 92%);
+      mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 92%);
+      user-select: none;
+      -webkit-user-drag: none;
+    }
 
-      nav {
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-        padding-bottom: 26px;
-        border-bottom: 1px solid var(--line);
-      }
+    .name-box {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 20px;
+    }
 
-      nav a {
-        font-size: 13px;
-        text-decoration: none;
-        color: var(--soft);
-        transition: .15s;
-      }
+    #star-canvas {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 380px;
+      height: 180px;
+      pointer-events: none;
+      z-index: 2;
+    }
 
-      nav a:hover {
-        color: var(--text);
-      }
+    h1 {
+      position: relative;
+      z-index: 1;
+      font-size: 1.95rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      text-shadow:
+        0 0 14px rgba(255, 255, 255, 0.45),
+        0 0 28px rgba(255, 42, 133, 0.24);
+    }
 
-      main section {
-        margin-bottom: 90px;
-        scroll-margin-top: 100px;
-      }
+    p.bio {
+      color: #8c8c96;
+      margin-bottom: 2.75rem;
+      font-size: 13.5px;
+      text-align: center;
+    }
 
-      main section:last-of-type {
-        margin-bottom: 0;
-      }
+    h2 {
+      font-size: 11px;
+      font-weight: 500;
+      color: #52525a;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.9rem;
+    }
 
-      h2 {
-        font-size: 11px;
-        letter-spacing: .18em;
-        text-transform: uppercase;
-        color: var(--soft);
-        font-weight: 400;
-        margin-bottom: 20px;
-      }
+    section {
+      margin-bottom: 2.4rem;
+    }
 
-      p {
-        font-size: 15px;
-        color: var(--mid);
-        margin-bottom: 18px;
-      }
+    .repo-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
 
-      strong {
-        font-weight: 400;
-        color: var(--text);
-      }
+    .repo-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
 
-      .clean-list {
-        list-style: none;
-      }
+    .repo-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-      .clean-list li {
-        padding: 16px 0;
-        border-bottom: 1px solid var(--line);
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
+    .repo-item a {
+      color: #ececec;
+      text-decoration: none;
+      width: fit-content;
+      font-weight: 600;
+      transition: color 0.12s ease;
+    }
 
-      .clean-list li:last-child {
-        border: none;
-      }
+    .repo-item a:hover {
+      color: #ff2a85;
+      text-decoration: underline;
+    }
 
-      .item-title {
-        font-size: 15px;
-        color: var(--text);
-      }
+    .tag {
+      font-size: 11px;
+      color: #52525b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-      .item-note {
-        font-size: 13px;
-        color: var(--soft);
-      }
+    .repo-desc {
+      color: #71717a;
+      font-size: 13px;
+    }
 
-      .future-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 18px;
-        margin-top: 12px;
-      }
+    .links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
 
-      .future-card {
-        border: 1px solid var(--line);
-        padding: 22px;
-        border-radius: 14px;
-        transition: .2s;
-      }
+    .links a {
+      color: #9898a0;
+      text-decoration: none;
+      font-size: 13.5px;
+      transition: color 0.12s ease;
+    }
 
-      .future-card:hover {
-        background: var(--hover);
-        transform: translateY(-2px);
-      }
+    .links a:hover {
+      color: #ff2a85;
+      text-decoration: underline;
+    }
 
-      .future-card h3 {
-        font-size: 14px;
-        font-weight: 400;
-        margin-bottom: 10px;
-      }
+    hr {
+      border: none;
+      border-top: 1px solid #1c1c1f;
+      margin: 2.75rem 0 1.4rem;
+    }
 
-      .future-card p {
-        font-size: 13px;
-        margin: 0;
-      }
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #4a4a52;
+    }
 
-      footer {
-        border-top: 1px solid var(--line);
-        padding-top: 30px;
-        margin-top: 60px;
-      }
+    .audio-btn {
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 12px;
+      color: #585862;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: none;
+      transition: color 0.12s ease;
+    }
 
-      .copyright {
-        color: #3d3d3d;
-        font-size: 12px;
-      }
+    .audio-btn:hover {
+      color: #ff2a85;
+    }
 
-      @media(max-width:700px) {
-        h1 {
-          font-size: 48px;
-        }
+    .audio-btn.playing {
+      color: #a1a1aa;
+    }
+  </style>
+</head>
+<body>
 
-        .future-grid {
-          grid-template-columns: 1fr;
-        }
-
-        body {
-          padding: 60px 20px 90px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <header>
-        <h1>idaexe</h1>
-        <p class="intro">Programming student writing C++ since 2020. Most of my time goes into reverse engineering, Windows internals and low-level systems stuff. I usually learn by taking things apart, rebuilding them and figuring out why they work.</p>
-        <div class="hero-image">
-          <img src="the-school-of-athens.jpg" alt="The School of Athens by Raphael" width="1200" height="375">
-        </div>
-        <nav aria-label="Primary navigation">
-          <a href="https://github.com/idaexe" rel="noopener noreferrer" target="_blank">Github</a>
-	  <a href="/" onclick="alert('Soon.')">Research</a>
-	  <a href="/" onclick="alert('Soon.')">Writing</a>
-	  <a href="/" onclick="alert('Soon.')">Blog</a>
-        </nav>
-      </header>
-      <main>
-        <section id="focus" aria-labelledby="focus-heading">
-          <h2 id="focus-heading">Focus</h2>
-          <ul class="clean-list">
-            <li>
-              <span class="item-title">Low-level programming</span>
-              <span class="item-note">Process memory, syscall interfaces, and what's actually happening at the boundary between software and the OS</span>
-            </li>
-            <li>
-              <span class="item-title">Reverse engineering</span>
-              <span class="item-note">Binary analysis, patching, protocol analysis, runtime behavior, emulator development, and systems internals</span>
-            </li>
-            <li>
-              <span class="item-title">Software protection</span>
-              <span class="item-note">Obfuscation layers, protection schemes, zero-trust architectures, server-assisted trust boundaries, and distributed authorization systems</span>
-            </li>
-            <li>
-              <span class="item-title">Computer systems</span>
-              <span class="item-note">How the Windows loader works, how the kernel surfaces itself to userland, how processes are structured internally</span>
-            </li>
-          </ul>
-        </section>
-        <section id="exploration" aria-labelledby="exploration-heading">
-          <h2 id="exploration-heading">Current Exploration</h2>
-          <ul class="clean-list">
-            <li>
-              <span class="item-title">Reading Windows Internals</span>
-              <span class="item-note">Process internals, the loader, and how the kernel exposes itself to user mode</span>
-            </li>
-            <li>
-              <span class="item-title">Compiler implementation notes</span>
-              <span class="item-note">How IR and pass pipelines work, from parsing through to code generation</span>
-            </li>
-            <li>
-              <span class="item-title">Small implementation experiments</span>
-              <span class="item-note">Rebuilding tools and ideas from scratch because I usually understand things faster when I can break them and see where they fail</span>
-            </li>
-          </ul>
-        </section>
-        <section id="future-work" aria-labelledby="future-heading">
-          <h2 id="future-heading">Future Work</h2>
-          <div class="future-grid">
-            <div class="future-card">
-              <h3>Memory experiments</h3>
-              <p>Messing around with allocators, process memory and understanding what actually happens after memory gets requested.</p>
-            </div>
-            <div class="future-card">
-              <h3>Compiler experiments</h3>
-              <p>IR design, pass pipelines, and building small compilers to understand each stage.</p>
-            </div>
-            <div class="future-card">
-              <h3>Systems tooling</h3>
-              <p>Building small tools around debugging, process memory and Windows internals.</p>
-            </div>
-            <div class="future-card">
-              <h3>Research projects</h3>
-              <p>Longer projects around software protection and reverse engineering problems that end up becoming way bigger than I expected.</p>
-            </div>
-          </div>
-        </section>
-        <section id="about" aria-labelledby="about-heading">
-          <h2 id="about-heading">About</h2>
-          <p>I started getting into reverse engineering because I hated not understanding things. I'd spend stupid amounts of time opening stuff in debuggers just to see what was happening.</p>
-          <p>That eventually turned into an interest in runtime behavior, software protection and understanding why systems are built the way they are.</p>
-          <p>What I like about security is that a lot of problems don't really have a perfect answer. Most of the time you're just trying to build something slightly better than whatever existed before.</p>
-        </section>
-        <section id="contact" aria-labelledby="contact-heading">
-          <h2 id="contact-heading">Contact</h2>
-          <p>Open to research conversations, collaboration or just questions.</p>
-          <ul class="clean-list">
-            <li>
-              <span class="item-title">
-                <a href="mailto:bG9s@proton.me" style="color:var(--text);text-decoration:none;">bG9s@proton.me</a>
-              </span>
-              <span class="item-note">Email</span>
-            </li>
-            <li>
-              <span class="item-title">
-                <a href="https://github.com/idaexe" rel="noopener noreferrer" target="_blank" style="color:var(--text);text-decoration:none;">github.com/idaexe</a>
-              </span>
-              <span class="item-note">Github</span>
-            </li>
-          </ul>
-        </section>
-      </main>
-      <footer>
-        <div class="copyright">&copy; 2026 idaexe</div>
-      </footer>
+  <div id="intro-layer" aria-label="Intro screen, click or press a key to skip">
+    <div class="intro-line">
+      <span id="typewriter-text"></span><span class="cursor" aria-hidden="true">_</span>
     </div>
-  </body>
+  </div>
+
+  <main class="wrap" id="main-content">
+
+    <header class="header">
+      <div class="pfp-wrap">
+        <img
+          class="pfp"
+          src="https://i.pinimg.com/736x/37/c2/fa/37c2fac94bb526deff7603213e1d7db4.jpg"
+          alt="ptrfault"
+          loading="eager"
+        >
+      </div>
+      <div class="name-box">
+        <canvas id="star-canvas" aria-hidden="true"></canvas>
+        <h1>ptrfault</h1>
+      </div>
+    </header>
+
+    <p class="bio">
+	  Writing low-level C++ softwares, messing with software security, and reversing everything.
+    </p>
+
+    <section>
+      <h2>Projects</h2>
+      <ul class="repo-list">
+        <li class="repo-item">
+          <div class="repo-title-row">
+            <a href="https://github.com/ptrfault/pelite" target="_blank" rel="noopener noreferrer">pelite</a>
+            <span class="tag">[MIT]</span>
+          </div>
+          <span class="repo-desc">A lightweight C++11 PE/COFF parsing library.</span>
+        </li>
+        <li class="repo-item">
+          <div class="repo-title-row">
+            <a href="https://github.com/ptrfault/binview" target="_blank" rel="noopener noreferrer">binview</a>
+            <span class="tag">[MIT]</span>
+          </div>
+          <span class="repo-desc">A lightweight C++11 binary data viewing and reading library.</span>
+        </li>
+		<li class="repo-item">
+          <div class="repo-title-row">
+            <a href="https://www.youtube.com/watch?v=bwEwh7sm26w" target="_blank" rel="noopener noreferrer">prometheus</a>
+          </div>
+          <span class="repo-desc">An invite-only project for CS:GO HvH.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Links</h2>
+      <ul class="links">
+        <li><a href="https://github.com/ptrfault" target="_blank" rel="noopener noreferrer">github</a></li>
+        <li><a href="mailto:bg9s@proton.me">email</a></li>
+      </ul>
+    </section>
+
+    <hr>
+
+    <footer>
+      <span>ptrfault</span>
+      <button id="audio-toggle" class="audio-btn" type="button" aria-label="Toggle background audio">[play track]</button>
+    </footer>
+
+  </main>
+
+  <audio id="bg-audio" src="assets/bg_song.opus" loop preload="none"></audio>
+
+  <script>
+    (function () {
+      const audio = document.getElementById('bg-audio');
+      const toggle = document.getElementById('audio-toggle');
+
+      function updateAudioUI(isPlaying) {
+        if (!toggle) return;
+        if (isPlaying) {
+          toggle.textContent = '[pause track]';
+          toggle.classList.add('playing');
+        } else {
+          toggle.textContent = '[play track]';
+          toggle.classList.remove('playing');
+        }
+      }
+
+      if (audio && toggle) {
+        audio.volume = 0.45;
+
+        toggle.addEventListener('click', () => {
+          if (audio.paused) {
+            audio.play().then(() => {
+              updateAudioUI(true);
+            }).catch(() => {
+              toggle.textContent = '[file missing: assets/bg_song.opus]';
+            });
+          } else {
+            audio.pause();
+            updateAudioUI(false);
+          }
+        });
+      }
+
+      const introLayer = document.getElementById('intro-layer');
+      const typewriterEl = document.getElementById('typewriter-text');
+      const mainContent = document.getElementById('main-content');
+
+      const phrases = [
+        'hello there.',
+        'welcome.',
+        'good to see you.',
+        'hi there..',
+      ];
+      const chosenPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+
+      let charIndex = 0;
+      let typeTimer = null;
+      let transitionTimer = null;
+      let hasTransitioned = false;
+
+      function revealPortfolio(fromUserGesture = false) {
+        if (hasTransitioned) return;
+        hasTransitioned = true;
+
+        if (typeTimer) clearTimeout(typeTimer);
+        if (transitionTimer) clearTimeout(transitionTimer);
+
+        if (typewriterEl) {
+          typewriterEl.textContent = chosenPhrase;
+        }
+
+        if (fromUserGesture && audio && audio.paused) {
+          audio.play().then(() => {
+            updateAudioUI(true);
+          }).catch(() => {
+          });
+        }
+
+        if (introLayer) {
+          introLayer.classList.add('fade-out');
+          setTimeout(() => {
+            introLayer.style.display = 'none';
+          }, 650);
+        }
+
+        setTimeout(() => {
+          if (mainContent) {
+            mainContent.classList.add('visible');
+          }
+        }, 160);
+      }
+
+      function typeNextChar() {
+        if (hasTransitioned) return;
+
+        if (charIndex < chosenPhrase.length) {
+          charIndex++;
+          if (typewriterEl) {
+            typewriterEl.textContent = chosenPhrase.slice(0, charIndex);
+          }
+          const jitter = 70 + Math.random() * 35;
+          typeTimer = setTimeout(typeNextChar, jitter);
+        } else {
+          transitionTimer = setTimeout(() => revealPortfolio(false), 650);
+        }
+      }
+
+      typeTimer = setTimeout(typeNextChar, 220);
+
+      if (introLayer) {
+        introLayer.addEventListener('click', () => revealPortfolio(true));
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (!hasTransitioned && (e.key === ' ' || e.key === 'Enter' || e.key === 'Escape')) {
+          e.preventDefault();
+          revealPortfolio(true);
+        }
+      });
+
+      const canvas = document.getElementById('star-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const WIDTH = 380;
+      const HEIGHT = 180;
+      let dpr = window.devicePixelRatio || 1;
+
+      const STAR_COUNT = 32;
+      const stars = [];
+
+      function setupCanvas() {
+        dpr = window.devicePixelRatio || 1;
+        canvas.width = WIDTH * dpr;
+        canvas.height = HEIGHT * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function randGaussian() {
+        return ((Math.random() + Math.random() + Math.random() + Math.random()) - 2) / 2;
+      }
+
+      function spawnStar(initialRandomAge = false) {
+        const cx = WIDTH / 2;
+        const cy = HEIGHT / 2 + 4;
+
+        const spreadX = randGaussian() * 96 + (Math.random() - 0.5) * 36;
+        const spreadY = randGaussian() * 20 + (Math.random() - 0.5) * 10;
+
+        const maxLife = 90 + Math.random() * 190;
+        const isGlint = Math.random() < 0.38;
+        const isPink = Math.random() < 0.25;
+
+        return {
+          baseX: cx + spreadX,
+          x: cx + spreadX,
+          y: cy + spreadY,
+          vx: (Math.random() - 0.5) * 0.14,
+          vy: -(0.09 + Math.random() * 0.26),
+          swayAmp: 1.5 + Math.random() * 5.5,
+          swayFreq: 0.012 + Math.random() * 0.022,
+          swayPhase: Math.random() * Math.PI * 2,
+          age: initialRandomAge ? Math.floor(Math.random() * maxLife) : 0,
+          maxLife: maxLife,
+          delay: initialRandomAge ? 0 : Math.floor(Math.random() * 28),
+          size: isGlint ? 1.5 + Math.random() * 1.45 : 0.75 + Math.random() * 1.05,
+          twinklePhase: Math.random() * Math.PI * 2,
+          twinkleSpeed: 0.025 + Math.random() * 0.045,
+          isGlint: isGlint,
+          color: isPink ? '255, 115, 180' : '255, 255, 255'
+        };
+      }
+
+      function initStars() {
+        setupCanvas();
+        stars.length = 0;
+        for (let i = 0; i < STAR_COUNT; i++) {
+          stars.push(spawnStar(true));
+        }
+      }
+
+      function drawFourPointStar(cx, cy, r, alpha, rgb) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.fillStyle = `rgba(${rgb}, ${alpha})`;
+        ctx.beginPath();
+        const inner = r * 0.27;
+        for (let i = 0; i < 4; i++) {
+          const angle = (i * Math.PI) / 2;
+          ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+          const midAngle = angle + Math.PI / 4;
+          ctx.lineTo(Math.cos(midAngle) * inner, Math.sin(midAngle) * inner);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+
+          if (s.delay > 0) {
+            s.delay--;
+            continue;
+          }
+
+          s.age++;
+          if (s.age >= s.maxLife) {
+            stars[i] = spawnStar(false);
+            continue;
+          }
+
+          const progress = s.age / s.maxLife;
+
+          let lifeAlpha;
+          if (progress < 0.22) {
+            lifeAlpha = progress / 0.22;
+          } else {
+            lifeAlpha = 1 - ((progress - 0.22) / 0.78);
+          }
+          lifeAlpha = Math.max(0, Math.min(1, lifeAlpha));
+
+          s.baseX += s.vx;
+          s.y += s.vy;
+          s.x = s.baseX + Math.sin(s.age * s.swayFreq + s.swayPhase) * s.swayAmp;
+          s.twinklePhase += s.twinkleSpeed;
+
+          const twinkle = 0.35 + 0.65 * ((Math.sin(s.twinklePhase) + 1) * 0.5);
+          const alpha = lifeAlpha * twinkle * 0.9;
+
+          if (alpha <= 0.01) continue;
+
+          if (s.isGlint) {
+            drawFourPointStar(s.x, s.y, s.size * 1.45, alpha, s.color);
+          } else {
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${s.color}, ${alpha})`;
+            ctx.fill();
+          }
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', setupCanvas);
+      initStars();
+      animate();
+    })();
+  </script>
+
+</body>
 </html>
